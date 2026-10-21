@@ -1,0 +1,25 @@
+{
+  "name": "projeto-qualidade-de-software---bahgua",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PedroPwoyti/Projeto-Qualidade-De-Software---Bahgua.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PedroPwoyti/Projeto-Qualidade-De-Software---Bahgua/issues"
+  },
+  "homepage": "https://github.com/PedroPwoyti/Projeto-Qualidade-De-Software---Bahgua#readme",
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0"
+  }
+}
