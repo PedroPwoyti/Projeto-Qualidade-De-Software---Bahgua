@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/main/BahguaAplication.js",
+    "dev": "node --watch src/main/BahguaAplication.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +22,7 @@
   "homepage": "https://github.com/PedroPwoyti/Projeto-Qualidade-De-Software---Bahgua#readme",
   "dependencies": {
     "dotenv": "^18.0.8",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3"
   }
 }

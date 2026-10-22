@@ -15,6 +15,10 @@ class ClienteRepository {
         return this.clientes.find(cliente => cliente.id === Number(id)) || null;
     }
 
+    buscarPorCpfCnpj(cpfCnpj) {
+        return this.clientes.find(cliente => cliente.cpfCnpj === cpfCnpj) || null;
+    }
+
     criar(dados) {
         const cliente = new Cliente({
             ...dados,
@@ -34,17 +38,12 @@ class ClienteRepository {
             nome: dados.nome,
             email: dados.email,
             endereco: dados.endereco,
-            telefones: dados.telefones
+            telefones: dados.telefones,
+            cpfCnpj: dados.cpfCnpj !== undefined ? dados.cpfCnpj : atual.cpfCnpj,
+            ativo: atual.ativo
         });
         this.clientes[indice] = atualizado;
         return atualizado;
-    }
-
-    excluir(id) {
-        const indice = this.clientes.findIndex(cliente => cliente.id === Number(id));
-        if (indice === -1) return false;
-        this.clientes.splice(indice, 1);
-        return true;
     }
 }
 
