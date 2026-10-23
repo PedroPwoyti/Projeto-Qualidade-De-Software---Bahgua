@@ -7,6 +7,11 @@ class ClienteRepository {
         this.proximoId = 1;
     }
 
+    reiniciar() {
+        this.clientes = [];
+        this.proximoId = 1;
+    }
+
     listar() {
         return [...this.clientes];
     }
@@ -35,12 +40,12 @@ class ClienteRepository {
         const atual = this.clientes[indice];
         const atualizado = new Cliente({
             id: atual.id,
-            nome: dados.nome,
-            email: dados.email,
-            endereco: dados.endereco,
-            telefones: dados.telefones,
+            nome: dados.nome !== undefined ? dados.nome : atual.nome,
+            email: dados.email !== undefined ? dados.email : atual.email,
+            endereco: dados.endereco !== undefined ? dados.endereco : atual.endereco,
+            telefones: dados.telefones !== undefined ? dados.telefones : atual.telefones,
             cpfCnpj: dados.cpfCnpj !== undefined ? dados.cpfCnpj : atual.cpfCnpj,
-            ativo: atual.ativo
+            ativo: dados.ativo !== undefined ? dados.ativo : atual.ativo
         });
         this.clientes[indice] = atualizado;
         return atualizado;

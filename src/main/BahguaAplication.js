@@ -1,9 +1,10 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const express = require('express');
 const AuthController = require('./control/AuthController');
 const ClienteController = require('./control/ClienteController');
 const FuncionarioController = require('./control/FuncionarioController');
-const funcionarioService = require('./service/FuncionarioService');
+const criarDadosIniciais = require('./service/DadosIniciaisService');
 const autenticar = require('./middleware/autenticar');
 const autorizar = require('./middleware/autorizar');
 
@@ -11,6 +12,20 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Suporte a CORS
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
+});
+
+// Arquivos estáticos do Frontend
+app.use(express.static(path.resolve(__dirname, '../frontend')));
 
 // Rotas de Autenticação
 app.post('/auth/login', AuthController.login);
@@ -42,7 +57,7 @@ if (require.main === module) {
         console.error('Erro: A variável de ambiente JWT_SECRET é obrigatória para iniciar o servidor.');
         process.exit(1);
     }
-    funcionarioService.criarAdministradorInicial();
+    criarDadosIniciais();
     app.listen(PORT, () => {
         console.log(`Servidor rodando em http://localhost:${PORT}`);
     });

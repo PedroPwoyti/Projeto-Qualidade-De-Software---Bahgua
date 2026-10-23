@@ -45,9 +45,15 @@ class FuncionarioService {
         return this._formatarResposta(funcionario);
     }
 
-    atualizar(id, dados) {
+    atualizar(id, dados, usuario) {
         const atual = funcionarioRepository.buscarPorId(id);
         if (!atual) return null;
+
+        if (atual.superAdmin && (Number(usuario?.id) !== atual.id || dados?.perfil !== 'administrador')) {
+            const erro = new Error('A conta Super Admin só pode ser editada pelo próprio titular e deve manter o perfil de administrador.');
+            erro.status = 403;
+            throw erro;
+        }
 
         this.validar(dados, true);
 
@@ -83,6 +89,12 @@ class FuncionarioService {
     desativar(id) {
         const atual = funcionarioRepository.buscarPorId(id);
         if (!atual) return null;
+
+        if (atual.superAdmin) {
+            const erro = new Error('A conta Super Admin não pode ser desativada.');
+            erro.status = 403;
+            throw erro;
+        }
 
         const atualizado = funcionarioRepository.atualizar(id, { ativo: false });
         return this._formatarResposta(atualizado);
@@ -156,9 +168,9 @@ class FuncionarioService {
             return null;
         }
 
-        const nome = process.env.ADMIN_NOME;
-        const email = process.env.ADMIN_EMAIL;
-        const senha = process.env.ADMIN_SENHA;
+        const nome = process.env.ADMIN_NOME || 'Administrador';
+        const email = process.env.ADMIN_EMAIL || 'admin@bahgua.com';
+        const senha = process.env.ADMIN_SENHA || 'admin123';
 
         if (!nome || !email || !senha) {
             return null;
@@ -175,6 +187,7 @@ class FuncionarioService {
             email: email.trim(),
             senhaHash,
             perfil: 'administrador',
+            superAdmin: true,
             ativo: true
         });
 
@@ -188,6 +201,7 @@ class FuncionarioService {
             nome: funcionario.nome,
             email: funcionario.email,
             perfil: funcionario.perfil,
+            superAdmin: funcionario.superAdmin,
             ativo: funcionario.ativo
         };
     }

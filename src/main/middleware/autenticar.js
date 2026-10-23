@@ -14,13 +14,16 @@ function autenticar(req, res, next) {
     }
 
     const token = partes[1];
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({ erro: 'Chave de autenticação JWT não configurada.' });
+    }
     if (!token) {
         return res.status(401).json({ erro: 'Token de autenticação ausente.' });
     }
 
     let payload;
     try {
-        payload = jwt.verify(token, process.env.JWT_SECRET);
+        payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
     } catch (erro) {
         return res.status(401).json({ erro: 'Token inválido ou expirado.' });
     }
@@ -36,6 +39,7 @@ function autenticar(req, res, next) {
 
     req.usuario = {
         id: funcionario.id,
+        superAdmin: funcionario.superAdmin,
         perfil: funcionario.perfil
     };
 

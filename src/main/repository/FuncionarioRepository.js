@@ -7,6 +7,11 @@ class FuncionarioRepository {
         this.proximoId = 1;
     }
 
+    reiniciar() {
+        this.funcionarios = [];
+        this.proximoId = 1;
+    }
+
     listar() {
         return [...this.funcionarios];
     }
@@ -37,6 +42,7 @@ class FuncionarioRepository {
         const atual = this.funcionarios[indice];
         const atualizado = new Funcionario({
             id: atual.id,
+            superAdmin: atual.superAdmin,
             nome: dados.nome !== undefined ? dados.nome : atual.nome,
             email: dados.email !== undefined ? dados.email : atual.email,
             senhaHash: dados.senhaHash !== undefined ? dados.senhaHash : atual.senhaHash,

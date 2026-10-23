@@ -47,7 +47,33 @@ API REST desenvolvida em Node.js com Express para o sistema Bahgua. O projeto se
      npm run dev
      ```
 
-Por padrão, a aplicação estará acessível em: `http://localhost:3000`
+Por padrão, a aplicação e o frontend estarão acessíveis em: `http://localhost:3000`
+
+Ao executar `npm start` ou `npm run dev`, o sistema cria o Super Admin configurado no ambiente, dois funcionários e três clientes fictícios para demonstração:
+
+| Funcionário | Perfil | E-mail | Senha inicial |
+| :--- | :--- | :--- | :--- |
+| Mariana Santos | Atendente | `atendente@bahgua.com` | `atendente123` |
+| Lucas Oliveira | Técnico | `tecnico@bahgua.com` | `tecnico123` |
+
+Os clientes iniciais são Ana Souza, Bruno Lima e Carla Ferreira. Os dados ficam em memória e são recriados ao reiniciar o servidor. A inicialização não duplica registros já existentes nem redefine suas alterações na mesma execução.
+
+---
+
+## Frontend do Sistema
+
+A aplicação inclui uma interface web completa (SPA modular com JavaScript ES6 nativo e CSS3 moderno), servida diretamente pelo Express:
+- **Acesso:** Abra `http://localhost:3000` no seu navegador.
+- **Identidade Visual:** Paleta de assistência técnica profissional com contraste em azul-marinho (`#304356`), azul principal (`#2878C8`), azul-claro (`#DCEAF5`), branco (`#FFFFFF`) e cinza-escuro (`#28323D`).
+- **Autenticação Real:** Login integrado ao endpoint `POST /auth/login`, envio automático de token JWT no cabeçalho `Authorization: Bearer <token>`, tratamento de expiração (401) e permissões (403).
+- **Credenciais Iniciais para Acesso:**
+  - **E-mail:** `admin@bahgua.com`
+  - **Senha:** `admin123`
+- **Dashboard (Visão Geral):** Contadores calculados em tempo real consultando a API (`GET /clientes`, `GET /funcionarios`), atalhos operacionais e lista de clientes recentes.
+- **Gestão de Clientes:** Tabela com busca por múltiplos critérios (nome, telefone com comparação de dígitos, CPF/CNPJ), cadastro e edição com máscaras dinâmicas, ativação/desativação e histórico de ordens (`GET /clientes/:id/ordens`).
+- **Gestão de Funcionários:** Exclusiva para o perfil Administrador, com filtragem por cargo, edição e salvaguardas para impedir auto-desativação.
+- **Módulos Planejados:** Telas conceituais para Produtos, Ordens de Serviço, Histórico e Configurações, detalhando a arquitetura sem gerar registros fictícios.
+- **Design Responsivo:** Totalmente adaptado para desktops, tablets e celulares (com menu lateral recolhível em gaveta off-canvas).
 
 ---
 
@@ -58,7 +84,7 @@ As configurações da aplicação são gerenciadas via variáveis de ambiente de
 | Variável | Descrição | Valor Padrão (.env.example) |
 | :--- | :--- | :--- |
 | `PORT` | Porta onde o servidor Express irá escutar | `3000` |
-| `JWT_SECRET` | Chave secreta para assinatura de tokens JWT *(obrigatória para iniciar o servidor)* | `seu_segredo_jwt_aqui` |
+| `JWT_SECRET` | Chave secreta para assinatura de tokens JWT *(obrigatória para iniciar o servidor)* | `exemplo_segredo_jwt_longo_e_seguro_minimo_32_caracteres_dev` |
 | `ADMIN_NOME` | Nome do administrador padrão do sistema | `Administrador` |
 | `ADMIN_EMAIL` | E-mail do administrador padrão | `admin@bahgua.com` |
 | `ADMIN_SENHA` | Senha do administrador padrão | `admin123` |
@@ -444,3 +470,15 @@ Gerenciamento de funcionários do sistema (atendentes, técnicos e administrador
     "erro": "Funcionário não encontrado."
   }
   ```
+
+
+---
+
+## Testes Automatizados
+
+A suíte de testes automatizados utiliza o executor nativo do Node.js (`node:test` e `node:assert`) e `fetch` nativo, cobrindo autenticação, controle de acesso, funcionários e clientes.
+
+Para executar todos os testes da aplicação:
+```bash
+npm test
+```

@@ -21,6 +21,9 @@ class FuncionarioController {
 
     criar(req, res) {
         try {
+            if (req.body?.perfil === 'administrador' && !req.usuario.superAdmin) {
+                return res.status(403).json({ erro: 'Somente o Super Admin pode cadastrar administradores.' });
+            }
             const funcionario = funcionarioService.criar(req.body);
             return res.status(201).json(funcionario);
         } catch (erro) {
@@ -30,12 +33,16 @@ class FuncionarioController {
 
     atualizar(req, res) {
         try {
+            const atual = funcionarioService.buscarPorId(req.params.id);
+            if (atual && req.body?.perfil === 'administrador' && atual.perfil !== 'administrador' && !req.usuario.superAdmin) {
+                return res.status(403).json({ erro: 'Somente o Super Admin pode promover funcionários a administrador.' });
+            }
             if (req.usuario && Number(req.usuario.id) === Number(req.params.id)) {
                 if (req.body && req.body.perfil && req.body.perfil !== 'administrador') {
                     return res.status(400).json({ erro: 'Um administrador não pode alterar o próprio perfil.' });
                 }
             }
-            const funcionario = funcionarioService.atualizar(req.params.id, req.body);
+            const funcionario = funcionarioService.atualizar(req.params.id, req.body, req.usuario);
             if (!funcionario) {
                 return res.status(404).json({ erro: 'Funcionário não encontrado.' });
             }

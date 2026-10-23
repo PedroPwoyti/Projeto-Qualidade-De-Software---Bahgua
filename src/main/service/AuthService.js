@@ -40,7 +40,7 @@ class AuthService {
         const token = jwt.sign(
             { id: funcionario.id, perfil: funcionario.perfil },
             jwtSecret,
-            { expiresIn: '8h' }
+            { algorithm: 'HS256', expiresIn: '8h' }
         );
 
         return {
